@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer & Translator</title>
+    <script>
+        async function processText(action) {
+            let text = document.getElementById("text").value;
+            let language = document.getElementById("language").value;
+
+            if (!text.trim()) {
+                alert("Please enter text first!");
+                return;
+            }
+
+            let data = { text: text, action: action, language: language };
+
+            let response = await fetch("/process", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            let result = await response.json();
+            document.getElementById("result").innerText = result.result || "Error processing text";
+        }
+    </script>
+</head>
+<body>
+    <h2>Text Summarizer & Translator</h2>
+    <textarea id="text" rows="6" cols="50" placeholder="Enter your text here..."></textarea><br>
+    
+    <button onclick="processText('summarize')">Summarize</button>
+    <button onclick="processText('translate')">Translate</button>
+    
+    <select id="language">
+        <option value="hi">Hindi</option>
+        <option value="fr">French</option>
+        <option value="es">Spanish</option>
+        <option value="de">German</option>
+        <option value="zh-cn">Chinese</option>
+        <option value="ja">Japanese</option>
+    </select>
+    
+    <h3>Result:</h3>
+    <p id="result"></p>
+</body>
+</html>
